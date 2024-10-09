@@ -9,7 +9,8 @@ class DataList extends React.Component {
         this.state = {
             username: "",
             password: "",
-            usersData:[]
+            usersData: [],
+            tableOPen:false
             // Age: "",
             // ServiceType: "",
             // Dob: "",
@@ -24,44 +25,44 @@ class DataList extends React.Component {
 
         const result = await api.getData();
         console.log(result, "result");
-        if(result && result.data){
-            this.setState({usersData:result.data})
+        if (result && result.data) {
+            this.setState({ usersData: result.data })
         }
         // Static data array
 
 
     }
-    generateTable = (data) => {
-        const tableHeader = document.getElementById("tableHeader");
-        const tableBody = document.getElementById("tableBody");
+    // generateTable = (data) => {
+    //     const tableHeader = document.getElementById("tableHeader");
+    //     const tableBody = document.getElementById("tableBody");
 
-        // Clear existing content in the table
-        tableHeader.innerHTML = "";
-        tableBody.innerHTML = "";
+    //     // Clear existing content in the table
+    //     tableHeader.innerHTML = "";
+    //     tableBody.innerHTML = "";
 
-        // Create table headers dynamically
-        const headers = Object.keys(data[0]);
-        headers.forEach(header => {
-            const th = document.createElement("th");
-            th.textContent = header.charAt(0).toUpperCase() + header.slice(1);
-            tableHeader.appendChild(th);
-        });
+    //     // Create table headers dynamically
+    //     const headers = Object.keys(data[0]);
+    //     headers.forEach(header => {
+    //         const th = document.createElement("th");
+    //         th.textContent = header.charAt(0).toUpperCase() + header.slice(1);
+    //         tableHeader.appendChild(th);
+    //     });
 
-        // Create table rows dynamically
-        data.forEach(item => {
-            const tr = document.createElement("tr");
+    //     // Create table rows dynamically
+    //     data.forEach(item => {
+    //         const tr = document.createElement("tr");
 
-            // Create table cells (td) for each property
-            headers.forEach(key => {
-                const td = document.createElement("td");
-                td.textContent = item[key];
-                tr.appendChild(td);
-            });
+    //         // Create table cells (td) for each property
+    //         headers.forEach(key => {
+    //             const td = document.createElement("td");
+    //             td.textContent = item[key];
+    //             tr.appendChild(td);
+    //         });
 
-            // Append row to table body
-            tableBody.appendChild(tr);
-        });
-    }
+    //         // Append row to table body
+    //         tableBody.appendChild(tr);
+    //     });
+    // }
     handlChange = (e) => {
         console.log(e, "eee");
         const { name, value } = e.target;
@@ -70,7 +71,7 @@ class DataList extends React.Component {
         this.setState({ [name]: value })
     }
     handlSubmit = async () => {
-        let { username, password ,usersData} = this.state
+        let { username, password, usersData } = this.state
         let userName = "SARVESH"
         let passWord = "sarvesh&murali@1987"
 
@@ -89,8 +90,9 @@ class DataList extends React.Component {
                 if (modal) {
                     modal.style.display = 'none';
                 }
-           
-                this.generateTable(usersData);
+                this.setState({tableOPen:true})
+
+                // this.generateTable(usersData);
             }
             else {
                 alert("invalid details")
@@ -144,17 +146,61 @@ class DataList extends React.Component {
 
                     </div>
                 </div>
+{
+    this.state.tableOPen &&
 
                 <div>
-                <div class="container">
-                    <table id="dataTable" class="table">
+                    <div class="container">
+                        {/* <table id="dataTable" class="table">
                         <thead>
                             <tr id="tableHeader"></tr>
                         </thead>
                         <tbody id="tableBody"></tbody>
-                    </table>
+                    </table> */}
+                        <table>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>Service</th>
+                                <th>Age</th>
+                                <th>Dob</th>
+                                <th>Passtive Feedback</th>
+                                <th>Nagative Feedback</th>
+                                <th>Date</th>
+
+                            </tr>
+                            {this.state.usersData && this.state.usersData.length ?
+                                this.state.usersData.map((ival, i) => {
+                                    return (
+
+                                        <>
+                                            <tr>
+                                                <td>{i + 1}</td>
+                                                <td>{ival.name}</td>
+                                                <td>{ival.mobile}</td>
+                                                <td>{ival.serviceType}</td>
+                                                <td>{ival.age}</td>
+                                                <td>{ival.dob}</td>
+                                                <td>{ival.pF}</td>
+                                                <td>{ival.nF}</td>
+                                                <td>{ival.date}</td>
+
+                                            </tr>
+                                        </>
+                                    )
+
+                                })
+                                :
+                                <>
+                                </>}
+
+
+                        </table>
+
+                    </div>
                 </div>
-                  </div>
+}
 
             </>
 
