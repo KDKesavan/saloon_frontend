@@ -146,4 +146,83 @@
 .success__close path {
   fill: #fff;
 }
+
+/* Styles for the button */
+button {
+  display: inline-block;
+  margin: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Modal container (hidden by default) */
+.modal {
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0); /* Center horizontally */
+  z-index: 1000; /* Sit on top */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+}
+
+/* Modal content box */
+.modal-content {
+  background-color: white;
+  margin: 10% auto; /* 10% from the top */
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+}
+
+/* Close button */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: red;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.container {
+  width: 90%;
+  margin: 20px auto;
+  text-align: center;
+}
   

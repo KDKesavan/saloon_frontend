@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import FormPage from './Component/Form';
+import DataList from './Component/Datas';
 
 
 function App() {
@@ -14,11 +15,11 @@ function App() {
         </div>
       )}
       />
-      {/* <Route exact path="/home" render={() => (
+      <Route exact path="/datas" render={() => (
         <div>
-
+<DataList/>
         </div>
-      )} /> */}
+      )} />
 
 
 
