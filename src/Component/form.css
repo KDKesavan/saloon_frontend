@@ -391,7 +391,7 @@ th {
   position: fixed;
   top: 0;
   left: 0;
-  overflow-y: auto;
+  overflow-x: hidden;
   padding-top: 20px;
 }
 
@@ -451,7 +451,7 @@ th {
 
 @media (max-width: 480px) {
   .sidebar {
-    width: 100px;
+    width: 200px;
   }
 
   .sidebar h2 {
@@ -468,6 +468,10 @@ th {
 
   .main-content {
     margin-left: 100px;
+  }
+  .menu-button {
+    left: 125px !important;
+    top:-45px !important;
   }
 }
 
