@@ -47,7 +47,7 @@ class FormPage extends React.Component {
             servicetype: ServiceType,
             dob: Dob,
             pF: PFeedback,
-            nF: NFeedback,
+            // nF: NFeedback,
             date: formattedDate
         };
 
@@ -113,13 +113,13 @@ class FormPage extends React.Component {
                         </div>
 
                         <div class="form-group">
-                            <label for="textarea">Postive feedback</label>
+                            <label for="textarea">Feedback</label>
                             <textarea name="PFeedback" id="textarea" rows="10" cols="50" required="" value={this.state.PFeedback} onChange={this.handlChange}>          </textarea>
                         </div>
-                        <div class="form-group">
+                        {/* <div class="form-group">
                             <label for="textarea">Nagative feedback</label>
                             <textarea name="NFeedback" id="textarea" rows="10" cols="50" required="" value={this.state.NFeedback} onChange={this.handlChange}>          </textarea>
-                        </div>
+                        </div> */}
                         <button class="form-submit-btn" type="submit" onClick={this.handlSubmit}>Submit</button>
                         {/* </form> */}
                     </div>

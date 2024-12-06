@@ -11,6 +11,7 @@ class DataList extends React.Component {
             usersData: [],
             tableOpen: false,
             loading: false,
+            page: 1,
             isAuthenticated: false // Track if the user is authenticated
         };
     }
@@ -71,9 +72,33 @@ class DataList extends React.Component {
             usersData: []
         });
     };
+    menuButtonChange = () => {
+        const menuButton = document.getElementById('menuButton');
+        const sideNavbar = document.getElementById('sidebar');
+        const headingHide = document.getElementById('heading');
 
+        menuButton.addEventListener('click', () => {
+            // Check the current width of the sidebar
+            if (sideNavbar.style.width === "200px" || sideNavbar.style.width === "") {
+                // Collapse the sidebar
+                sideNavbar.style.width = "50px";
+                headingHide.style.display = "none";
+                menuButton.classList.remove("active");
+                menuButton.style.position = "static";
+            } else {
+                // Expand the sidebar
+                sideNavbar.style.width = "200px";
+                headingHide.style.display = "block";
+                menuButton.classList.add("active");
+                menuButton.style.position = "relative";
+            }
+        });
+
+    }
     render() {
         const { username, password, usersData, tableOpen, loading, isAuthenticated } = this.state;
+        let WIDTH = window.innerWidth
+        console.log(WIDTH, "WIDTH");
 
         return (
             <>
@@ -121,8 +146,103 @@ class DataList extends React.Component {
                         </div>
                     </center>
                 ) : usersData.length > 0 && tableOpen ? (
-                    <div className="container">
-                        <center>
+                    <div className="containerd">
+                        <div class="sidebar" id="sidebar">
+                            <h2 style={{ textAlign: WIDTH > 768 ? "center" : "left" }} id="heading"> SARVESH SALOON</h2>
+                            {WIDTH < 768 ?
+                                <>
+                                    <div class="menu-button active" id="menuButton" onClick={this.menuButtonChange}>
+                                        <div class="menu-line line1"></div>
+                                        <div class="menu-line line2"></div>
+                                        <div class="menu-line line3"></div>
+                                    </div>
+                                </> :
+                                <>
+                                </>}
+
+                            <ul>
+                                <li><a href="#dashboard" onClick={() => this.setState({ page: 1 })}>Dashboard</a></li>
+                                <li><a href="#user-details" onClick={() => this.setState({ page: 2 })}>User Details</a></li>
+                                <li><a href="#offers" onClick={() => this.setState({ page: 3 })}>Offers</a></li>
+
+                            </ul>
+                        </div>
+                        <div class="main-content">
+                            {this.state.page === 1 ?
+                                <>
+                                    <div id="dashboard">
+                                        <h1>Dashboard</h1>
+                                        <p>Welcome to the dashboard page.</p>
+                                    </div>
+                                </> : this.state.page === 2 ?
+                                    <>
+                                        <div id="user-details">
+                                            <center>
+
+                                                <h1>User Details</h1>
+                                                <center>
+
+                                                    <button class="Btn" onClick={this.handleLogout}>
+                                                        <div class="sign">
+                                                            <svg viewBox="0 0 512 512">
+                                                                <path
+                                                                    d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"
+                                                                ></path>
+                                                            </svg>
+                                                        </div>
+
+                                                        <div class="text">Logout</div>
+                                                    </button>
+                                                </center>
+
+
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>S.No</th>
+                                                            <th>Name</th>
+                                                            <th>Mobile</th>
+                                                            <th>Service</th>
+                                                            <th>Age</th>
+                                                            <th>Dob</th>
+                                                            <th>Positive Feedback</th>
+                                                            <th>Negative Feedback</th>
+                                                            <th>Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {usersData.map((ival, i) => (
+                                                            <tr key={i}>
+                                                                <td>{i + 1}</td>
+                                                                <td>{ival.name}</td>
+                                                                <td>{ival.mobile}</td>
+                                                                <td>{ival.serviceType}</td>
+                                                                <td>{ival.age}</td>
+                                                                <td>{ival.dob}</td>
+                                                                <td>{ival.pF}</td>
+                                                                <td>{ival.nF}</td>
+                                                                <td>{ival.date}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </center>
+                                        </div>
+
+                                    </> : this.state.page === 3 ? <>
+                                        <div id="offers">
+                                            <h1>Offers</h1>
+                                            <p>Check out the latest offers here.</p>
+                                        </div>
+                                    </> :
+                                        <>
+
+                                        </>}
+
+
+
+                        </div>
+                        {/* <center>
 
                             <button class="Btn" onClick={this.handleLogout}>
                                 <div class="sign">
@@ -138,7 +258,6 @@ class DataList extends React.Component {
                         </center>
 
 
-                        {/* <button >Logout</button> Logout button */}
                         <table>
                             <thead>
                                 <tr>
@@ -168,7 +287,7 @@ class DataList extends React.Component {
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
+                        </table> */}
                     </div>
                 ) : null}
             </>
