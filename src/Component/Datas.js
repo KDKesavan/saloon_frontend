@@ -77,6 +77,11 @@ class DataList extends React.Component {
         const sideNavbar = document.getElementById('sidebar');
         const headingHide = document.getElementById('heading');
 
+        const navbarList = document.getElementById('navbarUlList');
+        const heading = document.getElementById('heading');
+
+
+
         menuButton.addEventListener('click', () => {
             // Check the current width of the sidebar
             if (sideNavbar.style.width === "200px" || sideNavbar.style.width === "") {
@@ -85,12 +90,18 @@ class DataList extends React.Component {
                 headingHide.style.display = "none";
                 menuButton.classList.remove("active");
                 menuButton.style.position = "static";
+                navbarList.style.display = "none";
+
+
             } else {
                 // Expand the sidebar
                 sideNavbar.style.width = "200px";
                 headingHide.style.display = "block";
                 menuButton.classList.add("active");
                 menuButton.style.position = "relative";
+                navbarList.style.display = "block";
+                heading.style.textAlign = "left"
+
             }
         });
 
@@ -160,7 +171,7 @@ class DataList extends React.Component {
                                 <>
                                 </>}
 
-                            <ul>
+                            <ul id="navbarUlList">
                                 <li><a href="#dashboard" onClick={() => this.setState({ page: 1 })}>Dashboard</a></li>
                                 <li><a href="#user-details" onClick={() => this.setState({ page: 2 })}>User Details</a></li>
                                 <li><a href="#offers" onClick={() => this.setState({ page: 3 })}>Offers</a></li>
@@ -177,7 +188,7 @@ class DataList extends React.Component {
                                 </> : this.state.page === 2 ?
                                     <>
                                         <div id="user-details">
-                                            <center>
+                                            <div>
 
                                                 <h1>User Details</h1>
                                                 <center>
@@ -195,38 +206,41 @@ class DataList extends React.Component {
                                                     </button>
                                                 </center>
 
+                                                <div>
 
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>S.No</th>
-                                                            <th>Name</th>
-                                                            <th>Mobile</th>
-                                                            <th>Service</th>
-                                                            <th>Age</th>
-                                                            <th>Dob</th>
-                                                            <th>Positive Feedback</th>
-                                                            <th>Negative Feedback</th>
-                                                            <th>Date</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {usersData.map((ival, i) => (
-                                                            <tr key={i}>
-                                                                <td>{i + 1}</td>
-                                                                <td>{ival.name}</td>
-                                                                <td>{ival.mobile}</td>
-                                                                <td>{ival.serviceType}</td>
-                                                                <td>{ival.age}</td>
-                                                                <td>{ival.dob}</td>
-                                                                <td>{ival.pF}</td>
-                                                                <td>{ival.nF}</td>
-                                                                <td>{ival.date}</td>
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S.No</th>
+                                                                <th>Name</th>
+                                                                <th>Mobile</th>
+                                                                <th>Service</th>
+                                                                <th>Age</th>
+                                                                <th>Dob</th>
+                                                                <th>Positive Feedback</th>
+                                                                <th>Negative Feedback</th>
+                                                                <th>Date</th>
                                                             </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </center>
+                                                        </thead>
+                                                        <tbody>
+                                                            {usersData.map((ival, i) => (
+                                                                <tr key={i}>
+                                                                    <td>{i + 1}</td>
+                                                                    <td>{ival.name}</td>
+                                                                    <td>{ival.mobile}</td>
+                                                                    <td>{ival.serviceType}</td>
+                                                                    <td>{ival.age}</td>
+                                                                    <td>{ival.dob}</td>
+                                                                    <td>{ival.pF}</td>
+                                                                    <td>{ival.nF}</td>
+                                                                    <td>{ival.date}</td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                     </> : this.state.page === 3 ? <>
