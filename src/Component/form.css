@@ -504,3 +504,16 @@ th {
 .menu-button.active .line3 {
   transform: translateY(-12px) rotate(-45deg);
 }
+/* From Uiverse.io by adamgiebl */ 
+.card {
+  width: auto;
+  height: auto;
+  background: rgb(236, 236, 236);
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+.sendBtn{
+  border: none;
+    background-color: green;
+    color: white;
+    border-radius: 5%;
+}

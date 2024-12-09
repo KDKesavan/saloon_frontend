@@ -2,6 +2,7 @@ import React from "react";
 import "./form.css";
 import api from "../APIS/api";
 import DataTable from "../Dynamic/Datatable";
+import { Chart } from "react-google-charts";
 // import ReactTable from 'react-table';
 // import 'react-table/react-table.css';
 
@@ -13,11 +14,43 @@ class DataList extends React.Component {
             username: "",
             password: "",
             usersData: [],
+            OffersData: [],
             tableOpen: false,
             loading: false,
             page: 1,
             isAuthenticated: false, // Track if the user is authenticated
             columns: [
+                {
+                    Header: 'Name',
+                    accessor: 'name' // String-based value accessors!
+                }, {
+                    Header: 'Age',
+                    accessor: 'age',
+
+                }, {
+                    Header: 'Mobile',
+                    accessor: 'mobile' // String-based value accessors!
+                }, {
+                    Header: 'Service Type',
+                    accessor: 'serviceType',
+
+                },
+                {
+                    Header: 'DOB',
+                    accessor: 'dob' // String-based value accessors!
+                }, {
+                    Header: 'Feedback',
+                    accessor: 'pF',
+
+                },
+            ],
+            offersColumns: [
+                {
+                    Header: 'Send',
+                    accessor: 'hhh' ,
+                    Cell: props => <button className='sendBtn'>Send</button>
+                    // String-based value accessors!
+                },
                 {
                     Header: 'Name',
                     accessor: 'name' // String-based value accessors!
@@ -62,6 +95,16 @@ class DataList extends React.Component {
             const result = await api.getData();
             if (result && result.data) {
                 this.setState({ usersData: result.data });
+                console.log(result.data, "result.data");
+                const currentMonth = new Date().getMonth() + 1; // Current month (1-12)
+                const filteredData = result.data.filter(item => {
+                    const dobMonth = new Date(item.dob).getMonth() + 1; // Extract month from 'dob'
+                    return dobMonth === currentMonth;
+                });
+                if (filteredData) {
+                    this.setState({ OffersData: filteredData })
+                }
+                console.log(filteredData, "filteredData");
             }
         } catch (error) {
             console.error("Error fetching data", error);
@@ -139,6 +182,41 @@ class DataList extends React.Component {
         const { username, password, usersData, tableOpen, loading, isAuthenticated } = this.state;
         let WIDTH = window.innerWidth
         console.log(WIDTH, "WIDTH");
+        const data = [
+            ["Task", "Hours per Day"],
+            ["Hair cut", 9],
+            ["Massage", 2],
+            ["Beard trim", 2],
+            ["Facial", 2],
+            ["Shave", 7],
+        ];
+
+        const options = {
+            // title: "My Daily Activities",
+        };
+        const BarData = [
+            ["Month", "Customer Count", { role: "style" }],
+            ["Jan", 30, "color: #76A7FA"], // January: 30 customers
+            ["Feb", 20, "color: #FF5733"], // February: 20 customers
+            ["Mar", 20, "color: #F4C542"], // March: 20 customers
+            ["Apr", 50, "color: #34A853"], // April: 50 customers
+            ["May", 40, "color: #4285F4"], // May: 40 customers
+            ["Jun", 35, "color: #EA4335"], // June: 35 customers
+        ];
+
+        // Chart options
+        const BarOptions = {
+            // title: "Monthly Saloon Customer Count",
+            chartArea: { width: "60%" },
+            hAxis: {
+                title: "Customers",
+                minValue: 0,
+            },
+            vAxis: {
+                title: "Month",
+            },
+            legend: "none", // Hides the legend
+        };
 
         return (
             <>
@@ -188,7 +266,7 @@ class DataList extends React.Component {
                 ) : usersData.length > 0 && tableOpen ? (
                     <div className="containerd">
                         <div class="sidebar" id="sidebar">
-                            <h2 style={{ textAlign: WIDTH > 768 ? "center" : "left" }} id="heading"> SARVESH SALOON</h2>
+                            <h2 style={{ textAlign: WIDTH > 768 ? "center" : "left" }} id="heading"><span style={{color:"#d500ea"}}>SARVESH</span>  SALOON</h2>
                             {WIDTH < 768 ?
                                 <>
                                     <div class="menu-button active" id="menuButton" onClick={this.menuButtonChange}>
@@ -213,6 +291,28 @@ class DataList extends React.Component {
                                     <div id="dashboard">
                                         <h1>Dashboard</h1>
                                         <p>Welcome to the dashboard page.</p>
+                                        <div className="card">
+                                            <h2>Monthly Saloon Customer Count</h2>
+                                            <Chart
+                                                chartType="ColumnChart"
+                                                data={BarData}
+                                                options={BarOptions}
+                                                width="100%"
+                                                height="400px"
+                                            />
+                                        </div>
+                                        <div className="card">
+                                            {/* <h2>Google Chart Example</h2> */}
+                                            <Chart
+                                                chartType="PieChart"
+                                                data={data}
+                                                options={options}
+                                                width={"100%"}
+                                                height={"400px"}
+                                            />
+                                        </div>
+
+
                                     </div>
                                 </> : this.state.page === 2 ?
                                     <>
@@ -276,9 +376,63 @@ class DataList extends React.Component {
                                         </div>
 
                                     </> : this.state.page === 3 ? <>
-                                        <div id="offers">
+                                        <div id="offecrs">
                                             <h1>Offers</h1>
-                                            <p>Check out the latest offers here.</p>
+                                            <div>
+
+                                                {/* <h1>User Details</h1> */}
+                                                <center>
+
+                                                    <button class="Btn" onClick={this.handleLogout}>
+                                                        <div class="sign">
+                                                            <svg viewBox="0 0 512 512">
+                                                                <path
+                                                                    d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"
+                                                                ></path>
+                                                            </svg>
+                                                        </div>
+
+                                                        <div class="text">Logout</div>
+                                                    </button>
+                                                </center>
+
+                                                <div>
+                                                    <DataTable
+                                                        data={this.state.OffersData}
+                                                        columns={this.state.offersColumns}
+                                                    />
+                                                    {/* <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S.No</th>
+                                                                <th>Name</th>
+                                                                <th>Mobile</th>
+                                                                <th>Service</th>
+                                                                <th>Age</th>
+                                                                <th>Dob</th>
+                                                                <th>Positive Feedback</th>
+                                                                <th>Negative Feedback</th>
+                                                                <th>Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {usersData.map((ival, i) => (
+                                                                <tr key={i}>
+                                                                    <td>{i + 1}</td>
+                                                                    <td>{ival.name}</td>
+                                                                    <td>{ival.mobile}</td>
+                                                                    <td>{ival.serviceType}</td>
+                                                                    <td>{ival.age}</td>
+                                                                    <td>{ival.dob}</td>
+                                                                    <td>{ival.pF}</td>
+                                                                    <td>{ival.nF}</td>
+                                                                    <td>{ival.date}</td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table> */}
+                                                </div>
+                                            </div>
                                         </div>
                                     </> :
                                         <>
