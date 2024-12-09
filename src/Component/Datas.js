@@ -1,6 +1,10 @@
 import React from "react";
 import "./form.css";
 import api from "../APIS/api";
+import DataTable from "../Dynamic/Datatable";
+// import ReactTable from 'react-table';
+// import 'react-table/react-table.css';
+
 
 class DataList extends React.Component {
     constructor(props) {
@@ -12,7 +16,32 @@ class DataList extends React.Component {
             tableOpen: false,
             loading: false,
             page: 1,
-            isAuthenticated: false // Track if the user is authenticated
+            isAuthenticated: false, // Track if the user is authenticated
+            columns: [
+                {
+                    Header: 'Name',
+                    accessor: 'name' // String-based value accessors!
+                }, {
+                    Header: 'Age',
+                    accessor: 'age',
+
+                }, {
+                    Header: 'Mobile',
+                    accessor: 'mobile' // String-based value accessors!
+                }, {
+                    Header: 'Service Type',
+                    accessor: 'serviceType',
+
+                },
+                {
+                    Header: 'DOB',
+                    accessor: 'dob' // String-based value accessors!
+                }, {
+                    Header: 'Feedback',
+                    accessor: 'pF',
+
+                },
+            ]
         };
     }
 
@@ -207,8 +236,11 @@ class DataList extends React.Component {
                                                 </center>
 
                                                 <div>
-
-                                                    <table>
+                                                    <DataTable
+                                                        data={this.state.usersData}
+                                                        columns={this.state.columns}
+                                                    />
+                                                    {/* <table>
                                                         <thead>
                                                             <tr>
                                                                 <th>S.No</th>
@@ -237,7 +269,7 @@ class DataList extends React.Component {
                                                                 </tr>
                                                             ))}
                                                         </tbody>
-                                                    </table>
+                                                    </table> */}
                                                 </div>
                                             </div>
 
