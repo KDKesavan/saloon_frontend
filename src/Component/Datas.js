@@ -113,8 +113,14 @@ class DataList extends React.Component {
         this.setState({ loading: true });
 
         try {
+            console.log("enter 1");
+            
             const result = await api.getData();
+            console.log(result,"result");
+            
             if (result && result.data) {
+                console.log("enter 2");
+                
                 this.setState({ usersData: result.data });
                 console.log(result.data, "result.data");
                 const currentMonth = new Date().getMonth() + 1; // Current month (1-12)
@@ -122,9 +128,13 @@ class DataList extends React.Component {
                     const dobMonth = new Date(item.dob).getMonth() + 1; // Extract month from 'dob'
                     return dobMonth === currentMonth;
                 });
+                console.log("enter 3");
+
                 if (filteredData) {
                     this.setState({ OffersData: filteredData })
                 }
+                console.log("enter 4");
+
                 console.log(filteredData, "filteredData");
             }
         } catch (error) {
