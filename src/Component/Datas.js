@@ -89,7 +89,7 @@ class DataList extends React.Component {
 
         if (result && result.data) {
             // Creating a message with URL encoding for spaces and special characters
-            let message = `Happy%20Birthday%20${encodeURIComponent(rowData.name)}!%20This%20month,%20enjoy%20an%20exclusive%20offer%20at%20Servesh%20Saloon%20just%20for%20you.Visit%20us%20and%20celebrate%20in%20style!`;
+            let message = `Happy%20Birthday%20${encodeURIComponent(rowData.name)}!🎉%20This%20month,%20enjoy%20an%20exclusive%20offer%20at%20Servesh%20Saloon%20just%20for%20you.Visit%20us%20and%20celebrate%20in%20style!`;
 
             // Formulating the WhatsApp URL with the message
             let link = `https://wa.me/91${rowData.mobile}?text=${message}`;
@@ -114,13 +114,13 @@ class DataList extends React.Component {
 
         try {
             console.log("enter 1");
-            
+
             const result = await api.getData();
-            console.log(result,"result");
-            
+            console.log(result, "result");
+
             if (result && result.data) {
                 console.log("enter 2");
-                
+
                 this.setState({ usersData: result.data });
                 console.log(result.data, "result.data");
                 const currentMonth = new Date().getMonth() + 1; // Current month (1-12)
