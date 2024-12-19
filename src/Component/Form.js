@@ -21,10 +21,38 @@ class FormPage extends React.Component {
     }
     handlChange = (e) => {
         console.log(e, "eee");
+        let { usersData } = this.state
         const { name, value } = e.target;
-
-
+        console.log(value,"values");
+        
         this.setState({ [name]: value })
+        if (name === "Mobile") {
+            let getData = []
+            let wait = usersData && usersData.map((ival) => {
+                if (value === ival.mobile) {
+                    getData.push(ival)
+                    console.log(ival, "ivl");
+                }
+
+            })
+            Promise.all(wait)
+            if(getData && getData.length){
+                this.setState({
+                    Name: getData[0].name,
+                    Age: getData[0].age,
+                    // ServiceType: getData[0].serviceType,
+                    Dob: getData[0].dob,
+                    // PFeedback:getData[0].pF,
+                })
+
+            }
+            console.log(getData, "getData");
+
+
+        }
+        if(name === "Dob"){
+            this.calculateAge();
+        }
     }
     handlSubmit = async () => {
         let { Mobile, Name, Age, ServiceType, Dob, PFeedback, NFeedback } = this.state
@@ -70,6 +98,51 @@ class FormPage extends React.Component {
         }
 
     }
+    async componentDidMount() {
+
+        this.fetchData(); // Fetch data without opening the login modal
+    }
+    calculateAge = () => {
+        const { Dob } = this.state;
+
+        if (Dob) {
+            const dob = new Date(Dob);
+            const today = new Date();
+            const age = today.getFullYear() - dob.getFullYear();
+            const month = today.getMonth() - dob.getMonth();
+
+            // If the DOB month is greater than today's month or the same but the day hasn't passed, subtract 1 from age
+            if (month < 0 || (month === 0 && today.getDate() < dob.getDate())) {
+                this.setState({ Age: age - 1 });
+            } else {
+                this.setState({ Age: age });
+            }
+        }
+    };
+
+    fetchData = async () => {
+
+        try {
+            const result = await api.getData();
+            if (result && result.data) {
+                this.setState({ usersData: result.data });
+                // console.log(result.data, "result.data");
+                // const currentMonth = new Date().getMonth() + 1; // Current month (1-12)
+                // const filteredData = result.data.filter(item => {
+                //     const dobMonth = new Date(item.dob).getMonth() + 1; // Extract month from 'dob'
+                //     return dobMonth === currentMonth;
+                // });
+                // if (filteredData) {
+                //     this.setState({ OffersData: filteredData })
+                // }
+                // console.log(filteredData, "filteredData");
+            }
+        } catch (error) {
+            console.error("Error fetching data", error);
+        } finally {
+            this.setState({ loading: false });
+        }
+    };
     render() {
         console.log("enter form page");
 
