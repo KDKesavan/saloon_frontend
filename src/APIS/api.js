@@ -13,7 +13,14 @@ const  getData =async data =>{
     return result
 }
 
+const  sendMsg =async data =>{
+    console.log(data,"data");
+    const result =  await http.post(`${ACCESS_POINT}/sendMsgOffers`, data);
+    return result
+}
+
 export default{
     signup,
-    getData
+    getData,
+    sendMsg
 }

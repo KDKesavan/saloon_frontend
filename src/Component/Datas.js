@@ -47,8 +47,15 @@ class DataList extends React.Component {
             offersColumns: [
                 {
                     Header: 'Send',
-                    accessor: 'hhh' ,
-                    Cell: props => <button className='sendBtn'>Send</button>
+                    accessor: 'hhh',
+                    Cell: ({ row }) => (
+                        <button
+                            className='sendBtn'
+                            onClick={() => this.sendOffersMsg(row.original)} // Pass the row data to sendOffersMsg
+                        >
+                            Send
+                        </button>
+                    )
                     // String-based value accessors!
                 },
                 {
@@ -77,7 +84,21 @@ class DataList extends React.Component {
             ]
         };
     }
+    sendOffersMsg = async (rowData) => {
+        const result = await api.sendMsg(rowData);
 
+        if (result && result.data) {
+            // Creating a message with URL encoding for spaces and special characters
+            let message = `Happy%20Birthday%20${encodeURIComponent(rowData.name)}!%20This%20month,%20enjoy%20an%20exclusive%20offer%20at%20Servesh%20Saloon%20just%20for%20you.Visit%20us%20and%20celebrate%20in%20style!`;
+
+            // Formulating the WhatsApp URL with the message
+            let link = `https://wa.me/91${rowData.mobile}?text=${message}`;
+
+            // Navigating to WhatsApp (opening the URL in a new tab or window)
+            window.open(link, "_blank");
+        }
+
+    }
     async componentDidMount() {
         // Check if the user is already logged in by checking localStorage
         const isAuthenticated = localStorage.getItem("isAuthenticated");
@@ -266,7 +287,7 @@ class DataList extends React.Component {
                 ) : usersData.length > 0 && tableOpen ? (
                     <div className="containerd">
                         <div class="sidebar" id="sidebar">
-                            <h2 style={{ textAlign: WIDTH > 768 ? "center" : "left" }} id="heading"><span style={{color:"#d500ea"}}>SARVESH</span>  SALOON</h2>
+                            <h2 style={{ textAlign: WIDTH > 768 ? "center" : "left" }} id="heading"><span style={{ color: "#d500ea" }}>SARVESH</span>  SALOON</h2>
                             {WIDTH < 768 ?
                                 <>
                                     <div class="menu-button active" id="menuButton" onClick={this.menuButtonChange}>
