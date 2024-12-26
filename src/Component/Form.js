@@ -2,6 +2,7 @@
 import React from "react";
 import "./form.css"
 import api from "../APIS/api";
+import Image1 from "../PNG.jpg"
 
 class FormPage extends React.Component {
     constructor(props) {
@@ -14,59 +15,92 @@ class FormPage extends React.Component {
             Dob: "",
             PFeedback: "",
             NFeedback: "",
-            succesFormsubmit: false
+            // succesFormsubmit: false,
+             errors: {}, // To store validation errors
+            succesFormsubmit: false,
 
         }
 
     }
     handlChange = (e) => {
-        console.log(e, "eee");
-        let { usersData } = this.state
         const { name, value } = e.target;
-        console.log(value,"values");
-        
-        this.setState({ [name]: value })
+        let { usersData } = this.state;
+        console.log(`${name}: ${value}`); // Log field changes for debugging
+
+        // Update state for the current field
+        this.setState({ [name]: value });
+
+        // Validation for Mobile number
         if (name === "Mobile") {
-            let getData = []
-            let wait = usersData && usersData.map((ival) => {
-                if (value === ival.mobile) {
-                    getData.push(ival)
-                    console.log(ival, "ivl");
-                }
-
-            })
-            Promise.all(wait)
-            if(getData && getData.length){
-                this.setState({
-                    Name: getData[0].name,
-                    Age: getData[0].age,
-                    // ServiceType: getData[0].serviceType,
-                    Dob: getData[0].dob,
-                    // PFeedback:getData[0].pF,
-                })
-
+            if (!/^\d{10}$/.test(value)) {
+                console.log("Invalid mobile number. Please enter a 10-digit number.");
+                return; // Return early if validation fails
             }
-            console.log(getData, "getData");
 
+            let getData = [];
+            let wait = usersData && usersData.map((user) => {
+                if (value === user.mobile) {
+                    getData.push(user);
+                }
+            });
 
+            Promise.all(wait).then(() => {
+                if (getData.length) {
+                    this.setState({
+                        Name: getData[0].name || "",
+                        Age: getData[0].age || "",
+                        Dob: getData[0].dob || "",
+                    });
+                    console.log("Data prefilled:", getData[0]);
+                } else {
+                    console.log("No user data found for this mobile number.");
+                }
+            });
         }
-        if(name === "Dob"){
-            this.calculateAge();
+
+        // Automatically calculate and update Age from DOB
+        if (name === "Dob") {
+            const today = new Date();
+            const birthDate = new Date(value);
+
+            if (birthDate > today) {
+                console.log("Invalid Date of Birth: cannot be in the future.");
+                return; // Return early for invalid DOB
+            }
+
+            const age = today.getFullYear() - birthDate.getFullYear();
+            const isBirthdayPassed =
+                today.getMonth() > birthDate.getMonth() ||
+                (today.getMonth() === birthDate.getMonth() &&
+                    today.getDate() >= birthDate.getDate());
+            const calculatedAge = isBirthdayPassed ? age : age - 1;
+
+            this.setState({ Age: calculatedAge > 0 ? calculatedAge : "" });
+            console.log(`Calculated Age: ${calculatedAge}`);
         }
     }
     handlSubmit = async () => {
-        let { Mobile, Name, Age, ServiceType, Dob, PFeedback, NFeedback } = this.state
+        const { Mobile, Name, Age, ServiceType, Dob, PFeedback, NFeedback } = this.state;
+        let errors = {};
 
-        console.log(Mobile, "Mobile", "Name", Name, "Age", Age, "Service", ServiceType, "Dob", Dob, "PF", PFeedback, "NF", NFeedback);
+        // Final validation checks
+        if (!Mobile) errors.Mobile = "Mobile number is required.";
+        if (!Name) errors.Name = "Name is required.";
+        if (!Age) errors.Age = "Age is required.";
+        if (!Dob) errors.Dob = "Date of birth is required.";
+        if (!ServiceType) errors.ServiceType = "Service type is required.";
+        if (!PFeedback) errors.PFeedback = "Feedback is required.";
+
+        if (Object.keys(errors).length > 0) {
+            this.setState({ errors });
+            return; // Stop form submission
+        }
+
         const today = new Date();
-
-        const day = String(today.getDate()).padStart(2, '0'); // Get day and add leading zero if needed
-        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so add 1
+        const day = String(today.getDate()).padStart(2, "0");
+        const month = String(today.getMonth() + 1).padStart(2, "0");
         const year = today.getFullYear();
-
         const formattedDate = `${day}-${month}-${year}`;
-        console.log(formattedDate); // Output: DD-MM-YYYY
-
 
         const formData = {
             mobile: Mobile,
@@ -75,7 +109,6 @@ class FormPage extends React.Component {
             servicetype: ServiceType,
             dob: Dob,
             pF: PFeedback,
-            // nF: NFeedback,
             date: formattedDate
         };
 
@@ -85,13 +118,20 @@ class FormPage extends React.Component {
             if (result) {
                 window.scrollTo(500, 0);
                 this.setState({
-                    Mobile: "", Name: "", Age: "", ServiceType: "", Dob: "", PFeedback: "", NFeedback: "", succesFormsubmit: true
-                })
+                    Mobile: "",
+                    Name: "",
+                    Age: "",
+                    ServiceType: "",
+                    Dob: "",
+                    PFeedback: "",
+                    NFeedback: "",
+                    succesFormsubmit: true,
+                    errors:{}
+                    
+                });
                 setTimeout(() => {
                     this.setState({ succesFormsubmit: false });
                 }, 3000);
-
-
             }
         } catch (error) {
             console.log(error, "error");
@@ -145,7 +185,7 @@ class FormPage extends React.Component {
     };
     render() {
         console.log("enter form page");
-
+        const { Mobile, Name, Age, ServiceType, Dob, PFeedback, errors, succesFormsubmit } = this.state;
         return (
             <>
                 {this.state.succesFormsubmit &&
@@ -159,44 +199,92 @@ class FormPage extends React.Component {
                     </div>
                 }
                 <div className="formPage">
-                    <div class="form-container">
-                        {/* <form class="form"> */}
-                        <h2 style={{ textAlign: "center" }}> SARVESH SALOON</h2>
-                        <h5 style={{ textAlign: "center", color: "#ff0fec" }}> PLEASE FILL THESE DETAILS FOR MY REFERENCE</h5>
+                    <div className="form-container">
+                        <img src={Image1}/>
+                        {/* <h2 style={{ textAlign: "center" }}>SARVESH SALOON</h2> */}
+                        <h5 style={{ textAlign: "center", color: "#ff0fec" }}>
+                            PLEASE FILL THESE DETAILS FOR MY REFERENCE
+                        </h5>
 
-                        <div class="form-group">
-                            <label for="Mobile">Mobile</label>
-                            <input type="number" name="Mobile" value={this.state.Mobile} required="" onChange={this.handlChange} />
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Name</label>
-                            <input type="text" name="Name" required="" value={this.state.Name} onChange={this.handlChange} />
-                        </div>
-                        <div class="form-group">
-                            <label for="email">DOB</label>
-                            <input type="date" id="email" name="Dob" required="" value={this.state.Dob} onChange={this.handlChange} />
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Age</label>
-                            <input type="number" id="email" name="Age" required="" value={this.state.Age} onChange={this.handlChange} />
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Service Type</label>
-                            <input type="text" id="email" name="ServiceType" required="" value={this.state.ServiceType} onChange={this.handlChange} />
+                        <div className="form-group">
+                            <label htmlFor="Mobile">Mobile</label>
+                            <input
+                                type="number"
+                                name="Mobile"
+                                value={Mobile}
+                                required
+                                onChange={this.handlChange}
+                            />
+                            {errors.Mobile && <small className="error">{errors.Mobile}</small>}
                         </div>
 
-                        <div class="form-group">
-                            <label for="textarea">Feedback</label>
-                            <textarea name="PFeedback" id="textarea" rows="10" cols="50" required="" value={this.state.PFeedback} onChange={this.handlChange}>          </textarea>
+                        <div className="form-group">
+                            <label htmlFor="Name">Name</label>
+                            <input
+                                type="text"
+                                name="Name"
+                                value={Name}
+                                required
+                                onChange={this.handlChange}
+                            />
+                            {errors.Name && <small className="error">{errors.Name}</small>}
                         </div>
-                        {/* <div class="form-group">
-                            <label for="textarea">Nagative feedback</label>
-                            <textarea name="NFeedback" id="textarea" rows="10" cols="50" required="" value={this.state.NFeedback} onChange={this.handlChange}>          </textarea>
-                        </div> */}
-                        <button class="form-submit-btn" type="submit" onClick={this.handlSubmit}>Submit</button>
-                        {/* </form> */}
+
+                        <div className="form-group">
+                            <label htmlFor="Dob">DOB</label>
+                            <input
+                                type="date"
+                                name="Dob"
+                                value={Dob}
+                                required
+                                onChange={this.handlChange}
+                            />
+                            {errors.Dob && <small className="error">{errors.Dob}</small>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="Age">Age</label>
+                            <input
+                                type="number"
+                                name="Age"
+                                value={Age}
+                                required
+                                onChange={this.handlChange}
+                            />
+                            {errors.Age && <small className="error">{errors.Age}</small>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="ServiceType">Service Type</label>
+                            <input
+                                type="text"
+                                name="ServiceType"
+                                value={ServiceType}
+                                required
+                                onChange={this.handlChange}
+                            />
+                            {errors.ServiceType && <small className="error">{errors.ServiceType}</small>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="textarea">Feedback</label>
+                            <textarea
+                                name="PFeedback"
+                                rows="10"
+                                cols="50"
+                                required
+                                value={PFeedback}
+                                onChange={this.handlChange}
+                            ></textarea>
+                            {errors.PFeedback && <small className="error">{errors.PFeedback}</small>}
+                        </div>
+
+                        {succesFormsubmit && <p className="success">Form submitted successfully!</p>}
+
+                        <button className="form-submit-btn" type="button" onClick={this.handlSubmit}>
+                            Submit
+                        </button>
                     </div>
-
                 </div>
             </>
         )

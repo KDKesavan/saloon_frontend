@@ -1,4 +1,7 @@
 /* From Uiverse.io by gharsh11032000 */
+
+
+
 .form-container {
   width: 400px;
   background: linear-gradient(#212121, #212121) padding-box,
@@ -518,3 +521,61 @@ th {
     color: white;
     border-radius: 5%;
 }
+
+/* calender */
+
+/* Calendar header (title, navigation buttons, views menu) */
+.fc .fc-toolbar.fc-header-toolbar {
+  background-color: #333; /* Dark background for header */
+  color: white;          /* White text for contrast */
+}
+
+/* Month/Week/Day view background */
+.fc .fc-view-harness {
+  /* background-color: #333; Dark background */
+}
+
+/* Calendar table cells (dates) */
+.fc .fc-daygrid-day, .fc .fc-timegrid-slot {
+  border: 1px solid #d500ea; /* Pink border around date slots */
+}
+
+/* Events on the calendar */
+.fc .fc-event {
+  background-color: #393939 !important; /* Pink background for events */
+  color: white !important;             /* White text on events */
+  border: none;                        /* Remove border on events */
+  font-weight: bold;                   /* Make event titles bold */
+}
+
+/* Current date highlight */
+.fc .fc-day-today {
+  background-color: rgba(213, 0, 234, 0.3); /* Lighter pink background */
+}
+
+/* Hover effect for events */
+.fc .fc-event:hover {
+  background-color: #b400ba; /* Darker pink for hover */
+  cursor: pointer;
+}
+
+/* Calendar's toolbar buttons (prev, next, today) */
+.fc .fc-button {
+  background-color: #d500ea; /* Pink background */
+  color: white;              /* White text */
+  border: none;              /* No border */
+  border-radius: 5px;        /* Rounded corners */
+}
+
+.fc .fc-button:hover {
+  background-color: #b400ba; /* Darker pink on hover */
+}
+
+/* Calendar table borders */
+.fc .fc-scrollgrid, .fc .fc-scrollgrid-section {
+  border: 1px solid #333; /* Darker border color */
+}
+.fc-col-header-cell-cushion{
+  color:white;
+}
+

@@ -3,6 +3,12 @@ import "./form.css";
 import api from "../APIS/api";
 import DataTable from "../Dynamic/Datatable";
 import { Chart } from "react-google-charts";
+import FullCalendar from "@fullcalendar/react"; // Import FullCalendar component
+import dayGridPlugin from "@fullcalendar/daygrid"; // Month view
+import timeGridPlugin from "@fullcalendar/timegrid"; // Week/day views
+import interactionPlugin from "@fullcalendar/interaction"; // Clickable events
+import moment from "moment";
+import { ACCESS_POINT } from "../Config/config";
 // import ReactTable from 'react-table';
 // import 'react-table/react-table.css';
 
@@ -81,7 +87,8 @@ class DataList extends React.Component {
                     accessor: 'pF',
 
                 },
-            ]
+            ],
+            events: [],
         };
     }
     sendOffersMsg = async (rowData) => {
@@ -106,8 +113,36 @@ class DataList extends React.Component {
         if (isAuthenticated === "true") {
             this.setState({ isAuthenticated: true, tableOpen: true });
             this.fetchData(); // Fetch data without opening the login modal
+            this.loadEvents(moment().startOf("month").format("YYYY-MM-DD"),
+                moment().endOf("month").format("YYYY-MM-DD"));
         }
     }
+
+    loadEvents = async (start, end) => {
+        try {
+            // Make an API call to fetch appointments
+            const response = await fetch(
+                `${ACCESS_POINT}/api/getAppointments?start=${start}&end=${end}`
+            );
+            const data = await response.json();
+
+            if (data.success) {
+                // Update state with fetched appointments
+                this.setState({ events: data.appointments });
+            } else {
+                console.error("Failed to fetch appointments:", data.message);
+            }
+        } catch (error) {
+            console.error("Error fetching appointments:", error);
+        }
+    }
+    handleDateChange = (args) => {
+        const start = moment(args.start).format("YYYY-MM-DD");
+        const end = moment(args.end).format("YYYY-MM-DD");
+
+        // Fetch new appointments based on visible date range
+        this.loadEvents(start, end);
+    };
 
     fetchData = async () => {
         this.setState({ loading: true });
@@ -210,7 +245,7 @@ class DataList extends React.Component {
 
     }
     render() {
-        const { username, password, usersData, tableOpen, loading, isAuthenticated } = this.state;
+        const { username, password, usersData, tableOpen, loading, isAuthenticated, events } = this.state;
         let WIDTH = window.innerWidth
         console.log(WIDTH, "WIDTH");
         const data = [
@@ -313,6 +348,8 @@ class DataList extends React.Component {
                                 <li><a href="#dashboard" onClick={() => this.setState({ page: 1 })}>Dashboard</a></li>
                                 <li><a href="#user-details" onClick={() => this.setState({ page: 2 })}>User Details</a></li>
                                 <li><a href="#offers" onClick={() => this.setState({ page: 3 })}>Offers</a></li>
+                                <li><a href="#appoinment" onClick={() => this.setState({ page: 4 })}>Appoinments</a></li>
+
 
                             </ul>
                         </div>
@@ -465,9 +502,32 @@ class DataList extends React.Component {
                                                 </div>
                                             </div>
                                         </div>
-                                    </> :
+                                    </> : this.state.page === 4 ?
                                         <>
-
+                                            <div className="container">
+                                                <h1>Appointment Calendar</h1>
+                                                <FullCalendar
+                                                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                                                    initialView="dayGridMonth" // Default view is Month View
+                                                    headerToolbar={{
+                                                        left: "prev,next today",
+                                                        center: "title",
+                                                        right: "dayGridMonth,timeGridWeek,timeGridDay",
+                                                    }}
+                                                    events={events} // Use fetched events
+                                                    editable={true} // Allow events to be draggable/resizable
+                                                    selectable={true} // Allow date selection
+                                                    datesSet={this.handleDateChange} // Fetch data when dates change
+                                                    eventClick={(info) => {
+                                                        alert(`Event: ${info.event.title}\nStart: ${info.event.start}`);
+                                                    }}
+                                                    slotMinTime="06:00:00" // Calendar starts at 6:00 AM
+                                                    slotMaxTime="21:00:00" // Calendar ends at 10:00 PM
+                                                />
+                                            </div>
+                                        </>
+                                        :
+                                        <>
                                         </>}
 
 
