@@ -396,7 +396,7 @@ th {
   left: 0;
   overflow-x: hidden;
   padding-top: 20px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .sidebar h2 {
@@ -577,5 +577,53 @@ th {
 }
 .fc-col-header-cell-cushion{
   color:white;
+  /* font-size: 8px; */
 }
 
+@media screen and (max-width: 768px) {
+  .fc .fc-toolbar.fc-header-toolbar {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 16px;
+  }
+
+  .fc .fc-button {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .fc .fc-daygrid-day {
+    min-height: 60px; /* Adjust cell height for mobile */
+  }
+
+  .fc .fc-timegrid-slot {
+    height: auto; /* Adjust slot height for better scrolling */
+  }
+}
+
+/* Adjust Event Display for Mobile */
+@media screen and (max-width: 480px) {
+  .fc .fc-event {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 14px;
+  }
+
+  .fc .fc-button {
+    font-size: 10px;
+    padding: 3px 5px;
+  }
+  .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events{
+    min-height: 0px !important;
+  }
+  .fc-col-header-cell-cushion{
+    color:white;
+    font-size: 8px !important;
+  }
+}
